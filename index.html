@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080b14">
+<title>NEXORA OS</title>
+<style>
+:root {
+  --bg:#080b14;--panel:rgba(19,25,42,.88);--card:#171e30;
+  --text:#f5f7ff;--muted:#9ba8c3;--accent:#7c83ff;
+  --line:rgba(255,255,255,.09);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;overflow-x:hidden}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wallpaper{position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 15% 15%,#332b70 0,transparent 45%),radial-gradient(ellipse at 90% 85%,#123c60 0,transparent 45%),#080b14;transition:background .3s}
+.topbar{height:60px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:#090c15aa;border-bottom:1px solid var(--line);backdrop-filter:blur(20px);position:sticky;top:0;z-index:20}
+.brand{font-weight:900;letter-spacing:1.5px;font-size:17px}
+.brand span{color:var(--accent)}
+.top-actions{display:flex;gap:8px;align-items:center}
+.pill,.btn{border:1px solid var(--line);background:#ffffff0c;padding:9px 13px;border-radius:12px}
+.btn.primary{background:var(--accent);color:white;border-color:transparent}
+.btn.danger{color:#ff8d9b}
+main{max-width:1200px;margin:auto;padding:26px 22px 100px}
+.welcome{padding:28px 0 20px}
+.eyebrow{color:var(--accent);font-size:12px;letter-spacing:2px;font-weight:800}
+h1{font-size:clamp(27px,5vw,43px);margin:10px 0}
+p{line-height:1.8}
+.muted{color:var(--muted)}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:28px 0 15px}
+.section-title h2{font-size:18px;margin:0}
+.apps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.app-card{min-height:126px;padding:18px 10px;border:1px solid var(--line);border-radius:18px;background:var(--panel);text-align:center;transition:.2s}
+.app-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.app-icon{font-size:30px;display:block;margin-bottom:12px}
+.app-card strong{font-size:13px}
+.app-card small{display:block;color:var(--muted);margin-top:6px}
+.panel{border:1px solid var(--line);background:var(--panel);border-radius:19px;padding:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:var(--card);padding:17px;border-radius:14px}
+.stat strong{display:block;font-size:23px;margin-bottom:6px}
+.stat small{color:var(--muted)}
+.dock{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;padding:8px;background:#121827eF;border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(25px);z-index:30;max-width:95vw}
+.dock button{background:transparent;border:0;border-radius:10px;padding:9px;font-size:22px}
+.dock button:hover{background:#ffffff16}
+.window{position:fixed;z-index:25;top:8%;left:50%;transform:translateX(-50%);width:min(900px,94vw);height:min(760px,82vh);display:none;flex-direction:column;background:var(--bg);border:1px solid #ffffff24;border-radius:18px;box-shadow:0 25px 100px #000b;overflow:hidden}
+.window.show{display:flex}
+.window-head{height:52px;flex-shrink:0;background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--line)}
+.window-head button{background:transparent;border:0;font-size:18px;padding:8px}
+.window-body{padding:16px;overflow:auto;flex:1;min-height:0}
+.field{width:100%;padding:12px;background:#090d18;color:var(--text);border:1px solid var(--line);border-radius:10px;margin:5px 0 12px}
+textarea.field{resize:vertical;min-height:140px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.file-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:10px;margin-top:15px}
+.file-item{background:var(--card);border:1px solid var(--line);padding:15px 9px;border-radius:13px;text-align:center;overflow-wrap:anywhere}
+.file-item .file-emoji{font-size:28px;display:block;margin-bottom:8px}
+.file-item button{background:transparent;border:0;color:var(--muted);font-size:12px;margin-top:8px}
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.game{padding:17px;background:var(--card);border:1px solid var(--line);border-radius:15px}
+.game .cover{font-size:38px;margin-bottom:15px}
+.game h3{font-size:15px}
+.game p{font-size:12px;color:var(--muted)}
+.editor{display:grid;grid-template-columns:1fr 1fr;gap:12px;height:calc(100% - 45px);min-height:300px}
+.editor textarea{width:100%;height:100%;min-height:260px;background:#050810;color:#a9e5ff;border:1px solid var(--line);border-radius:12px;padding:12px;direction:ltr;text-align:left;resize:none;font-family:monospace;font-size:13px}
+.editor iframe{width:100%;height:100%;min-height:260px;background:white;border:0;border-radius:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.note button{float:left}
+.profile-screen{position:fixed;inset:0;z-index:50;background:#080b14;display:flex;align-items:center;justify-content:center;padding:20px}
+.profile-box{width:min(500px,100%);text-align:center}
+.profile-list{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:25px 0}
+.profile{background:transparent;border:1px solid var(--line);border-radius:15px;padding:15px;min-width:100px}
+.profile .avatar{font-size:35px;display:block;margin-bottom:8px}
+.profile-box input{max-width:320px}
+.empty{color:var(--muted);text-align:center;padding:30px}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 0}
+@media(max-width:600px){
+ main{padding:14px 14px 95px}.apps{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .app-card{min-height:115px}.topbar{padding:0 11px}.top-actions .pill{display:none}
+ .stats{gap:7px}.stat{padding:12px}.stat strong{font-size:19px}
+ .window{top:4%;height:87vh;width:96vw}
+ .editor{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+ .editor textarea,.editor iframe{min-height:200px}
+ .dock{bottom:max(9px,env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+<div class="wallpaper" id="wallpaper"></div>
+
+<header class="topbar">
+  <div class="brand">NEXORA <span>OS</span></div>
+  <div class="top-actions">
+    <span class="pill" id="clock">--:--</span>
+    <button class="btn" onclick="openApp('settings')">⚙️</button>
+    <button class="btn" onclick="showProfiles()">👤</button>
+  </div>
+</header>
+
+<main>
+  <section class="welcome">
+    <div class="eyebrow">YOUR DIGITAL SPACE</div>
+    <h1>أهلًا، <span id="welcomeName">المستخدم</span> 👋</h1>
+    <p class="muted">مساحتك الرقمية. افتح أدواتك، أنشئ أفكارك، وابدأ مشروعك القادم.</p>
+  </section>
+
+  <div class="section-title"><h2>التطبيقات</h2><span class="muted">NEXORA OS 1.0</span></div>
+  <section class="apps">
+    <button class="app-card" onclick="openApp('files')"><span class="app-icon">📁</span><strong>مدير الملفات</strong><small>ملفاتك ومجلداتك</small></button>
+    <button class="app-card" onclick="openApp('notes')"><span class="app-icon">📝</span><strong>الملاحظات</strong><small>أفكارك في مكان واحد</small></button>
+    <button class="app-card" onclick="openApp('games')"><span class="app-icon">🎮</span><strong>مكتبة الألعاب</strong><small>اكتشف ألعابًا</small></button>
+    <button class="app-card" onclick="openApp('editor')"><span class="app-icon">💻</span><strong>محرر الأكواد</strong><small>اكتب وجرّب مباشرة</small></button>
+    <button class="app-card" onclick="openApp('settings')"><span class="app-icon">🎨</span><strong>التخصيص</strong><small>اختر مظهر نظامك</small></button>
+    <button class="app-card" onclick="openApp('about')"><span class="app-icon">🚀</span><strong>عن المشروع</strong><small>فريق NEXORA Studio</small></button>
+  </section>
+
+  <div class="section-title"><h2>مساحة العمل</h2></div>
+  <section class="stats">
+    <div class="stat"><strong id="fileCount">0</strong><small>عناصر الملفات</small></div>
+    <div class="stat"><strong id="noteCount">0</strong><small>الملاحظات</small></div>
+    <div class="stat"><strong id="gameCount">4</strong><small>ألعاب في المكتبة</small></div>
+  </section>
+
+  <div class="section-title"><h2>الوصول السريع</h2></div>
+  <section class="panel">
+    <p class="muted">ابدأ بإنشاء ملف أو اكتب فكرة قبل أن تنساها.</p>
+    <div class="row">
+      <button class="btn primary" onclick="createFile()">＋ ملف جديد</button>
+      <button class="btn" onclick="newNote()">＋ ملاحظة</button>
+      <button class="btn" onclick="openApp('editor')">فتح المحرر ↗</button>
+    </div>
+  </section>
+  <footer>NEXORA STUDIO · مشروع تجريبي يعمل داخل المتصفح</footer>
+</main>
+
+<nav class="dock">
+  <button title="الرئيسية" onclick="closeWindows()">🏠</button>
+  <button title="الملفات" onclick="openApp('files')">📁</button>
+  <button title="الملاحظات" onclick="openApp('notes')">📝</button>
+  <button title="الألعاب" onclick="openApp('games')">🎮</button>
+  <button title="محرر الأكواد" onclick="openApp('editor')">💻</button>
+  <button title="الإعدادات" onclick="openApp('settings')">⚙️</button>
+</nav>
+
+<!-- FILE MANAGER -->
+<section class="window" id="win-files">
+ <div class="window-head"><strong>📁 مدير الملفات</strong><button onclick="closeWindows()">✕</button></div>
+ <div class="window-body">
+  <p class="muted">ملفات تجريبية تُحفظ داخل المتصفح.</p>
+  <div class="row">
+   <button class="btn primary" onclick="createFile()">＋ ملف نصي</button>
+   <button class="btn" onclick="createFolder()">📂 مجلد جديد</button>
+   <button class="btn" onclick="exportData()">⬇️ نسخة احتياطية</button>
+   <button class="btn" onclick="document.getElementById('importInput').click()">⬆️ استعادة</button>
+   <input id="importInput" type="file" accept=".json,application/json" class="hidden" onchange="importData(event)">
+  </div>
+  <div id="fileList" class="file-list"></div>
+ </div>
+</section>
+
+<!-- NOTES -->
+<section class="window" id="win-notes">
+ <div class="window-head"><strong>📝 الملاحظات</strong><button onclick="closeWindows()">✕</button></div>
+ <div class="window-body">
+  <button class="btn primary" onclick="newNote()">＋ ملاحظة جديدة</button>
+  <div id="noteList"></div>
+ </div>
+</section>
+
+<!-- GAMES -->
+<section class="window" id="win-games">
+ <div class="window-head"><strong>🎮 مكتبة الألعاب</strong><button onclick="closeWindows()">✕</button></div>
+ <div class="window-body">
+  <p class="muted">ألعاب بسيطة تعمل في المتصفح. هذه المكتبة ليست متجر ألعاب تجارية.</p>
+  <div class="game-grid" id="gameGrid"></div>
+ </div>
+</section>
+
+<!-- HTML EDITOR -->
+<section class="window" id="win-editor">
+ <div class="window-head"><strong>💻 محرر الأكواد</strong><div><button onclick="runCode()">▶ تشغيل</button><button onclick="closeWindows()">✕</button></div></div>
+ <div class="window-body">
+  <p class="muted">اكتب HTML مع CSS وJavaScript داخل الملف نفسه ثم اضغط تشغيل.</p>
+  <div class="editor">
+   <textarea id="codeInput" spellcheck="false" aria-label="محرر HTML"><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<style>
+body { font-family: sans-serif; padding: 25px; background: #101827; color: white; }
+h1 { color: #9297ff; }
+button { padding: 10px 15px; border: 0; border-radius: 8px; }
+</style>
+</head>
+<body>
+<h1>مرحبًا بك في NEXORA!</h1>
+<p>هذه أول تجربة لك في محرر الأكواد.</p>
+<button onclick="document.querySelector('p').textContent='اشتغل الكود بنجاح!'">جرّبني</button>
+</body>
+</html></textarea>
+   <iframe id="preview" title="معاينة الكود" sandbox="allow-scripts"></iframe>
+  </div>
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="window" id="win-settings">
+ <div class="window-head"><strong>🎨 التخصيص والإعدادات</strong><button onclick="closeWindows()">✕</button></div>
+ <div class="window-body">
+  <h3>الخلفيات</h3>
+  <div class="row">
+   <button class="btn" onclick="setTheme(0)">🌌 فضائي</button>
+   <button class="btn" onclick="setTheme(1)">🌊 محيطي</button>
+   <button class="btn" onclick="setTheme(2)">🌅 غروب</button>
+   <button class="btn" onclick="setTheme(3)">🌿 أخضر</button>
+  </div>
+  <h3>لون الواجهة</h3>
+  <div class="row">
+   <button class="btn" onclick="setAccent('#7c83ff')">💜 بنفسجي</button>
+   <button class="btn" onclick="setAccent('#31b9e8')">💙 أزرق</button>
+   <button class="btn" onclick="setAccent('#2bc99a')">💚 أخضر</button>
+   <button class="btn" onclick="setAccent('#ff668c')">🩷 وردي</button>
+  </div>
+  <h3>البيانات</h3>
+  <p class="muted">يمكنك تصدير ملفاتك وملاحظاتك للاحتفاظ بنسخة احتياطية.</p>
+  <div class="row">
+   <button class="btn primary" onclick="exportData()">تصدير البيانات</button>
+   <button class="btn danger" onclick="clearMyData()">مسح ملفات وملاحظات هذا الملف الشخصي</button>
+  </div>
+  <p class="muted">تغيير الثيم يُحفظ على هذا الجهاز. لا تضع معلومات سرية في هذه النسخة التجريبية.</p>
+ </div>
+</section>
+
+<!-- ABOUT -->
+<section class="window" id="win-about">
+ <div class="window-head"><strong>🚀 عن NEXORA OS</strong><button onclick="closeWindows()">✕</button></div>
+ <div class="window-body">
+  <div class="eyebrow">NEXORA STUDIO</div>
+  <h1>NEXORA OS 1.0</h1>
+  <p>مساحة عمل تجريبية داخل المتصفح، تجمع أدوات بسيطة في واجهة واحدة.</p>
+  <div class="panel">
+   <p>🛠️ HTML · CSS · JavaScript</p>
+   <p>💾 تخزين محلي على الجهاز</p>
+   <p>🌐 مناسبة للنشر على GitHub Pages</p>
+   <p>📱 تصميم متجاوب مع مختلف الشاشات</p>
+  </div>
+  <p class="muted">هذا المشروع لا يستبدل نظام تشغيل الجهاز الحقيقي، ولا يشغّل برامج الكمبيوتر أو الألعاب التجارية مباشرة.</p>
+ </div>
+</section>
+
+<!-- PROFILE SELECTOR -->
+<section class="profile-screen" id="profileScreen">
+ <div class="profile-box">
+  <div class="brand">NEXORA <span>OS</span></div>
+  <h1>من يستخدم النظام؟</h1>
+  <p class="muted">اختر ملفك الشخصي أو أنشئ ملفًا جديدًا.</p>
+  <div class="profile-list" id="profileList"></div>
+  <input class="field" id="profileName" maxlength="24" placeholder="اسم الملف الشخصي">
+  <button class="btn primary" onclick="addProfile()">＋ إنشاء ملف شخصي</button>
+  <p class="muted" style="font-size:12px">الملفات الشخصية محلية وليست حسابات إنترنت.</p>
+ </div>
+</section>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const STORE = "nexora_os_v1";
+const PROFILE_STORE = "nexora_profiles_v1";
+const THEMES = [
+ "radial-gradient(ellipse at 15% 15%,#332b70,transparent 45%),radial-gradient(ellipse at 90% 85%,#123c60,transparent 45%),#080b14",
+ "radial-gradient(ellipse at 15% 15%,#075985,transparent 45%),radial-gradient(ellipse at 90% 85%,#164e63,transparent 45%),#06121c",
+ "radial-gradient(ellipse at 15% 15%,#7c2d12,transparent 45%),radial-gradient(ellipse at 90% 85%,#831843,transparent 45%),#170910",
+ "radial-gradient(ellipse at 15% 15%,#14532d,transparent 45%),radial-gradient(ellipse at 90% 85%,#164e63,transparent 45%),#07130e"
+];
+const GAMES = [
+ {name:"لعبة الأرقام",icon:"🔢",desc:"تحدَّ ذاكرتك",url:"numbers"},
+ {name:"لعبة الألوان",icon:"🎨",desc:"اختبر سرعة ملاحظتك",url:"colors"},
+ {name:"لعبة التخمين",icon:"🧠",desc:"خمّن الرقم الصحيح",url:"guess"},
+ {name:"لعبة النقر",icon:"⚡",desc:"اضغط بأسرع ما تستطيع",url:"click"}
+];
+
+let profiles = loadProfiles();
+let activeProfile = null;
+let state = null;
+let gameTimer = null;
+
+function safeParse(value, fallback) {
+ try { return value ? JSON.parse(value) : fallback; }
+ catch { return fallback; }
+}
+function loadProfiles() {
+ const p = safeParse(localStorage.getItem(PROFILE_STORE), []);
+ return Array.isArray(p) ? p.filter(x => x && typeof x.id === "string" && typeof x.name === "string") : [];
+}
+function saveProfiles() {
+ localStorage.setItem(PROFILE_STORE, JSON.stringify(profiles));
+}
+function profileKey() { return STORE + "_" + activeProfile; }
+
+function loadState() {
+ const s = safeParse(localStorage.getItem(profileKey()), null);
+ if (s && Array.isArray(s.files) && Array.isArray(s.notes)) {
+  return s;
+ }
+ return {files:[], notes:[], theme:0, accent:"#7c83ff"};
+}
+function saveState() {
+ if (!state || !activeProfile) return;
+ try {
+  localStorage.setItem(profileKey(), JSON.stringify(state));
+  updateDashboard();
+ } catch {
+  alert("مساحة التخزين غير كافية. صدّر بياناتك واحذف العناصر غير الضرورية.");
+ }
+}
+function esc(value) {
+ return String(value).replace(/[&<>"']/g, c => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+function uid() {
+ return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+}
+function showProfiles() {
+ closeWindows();
+ $("profileScreen").classList.remove("hidden");
+ renderProfiles();
+}
+function renderProfiles() {
+ $("profileList").innerHTML = profiles.map(p =>
+  `<button class="profile" onclick="selectProfile('${p.id}')">
+   <span class="avatar">${p.avatar || "👤"}</span>
+   <strong>${esc(p.name)}</strong>
+   <span class="muted" style="display:block;font-size:11px;margin-top:8px">اختيار</span>
+  </button>`
+ ).join("");
+}
+function addProfile() {
+ const name = $("profileName").value.trim();
+ if (!name) { alert("اكتب اسمًا للملف الشخصي."); return; }
+ if (profiles.length >= 5) { alert("يمكنك إنشاء 5 ملفات شخصية كحد أقصى."); return; }
+ const p = {id:uid(), name, avatar:["👤","🧑‍💻","🚀","🎮","🌟"][profiles.length]};
+ profiles.push(p);
+ saveProfiles();
+ $("profileName").value = "";
+ renderProfiles();
+ selectProfile(p.id);
+}
+function selectProfile(id) {
+ const p = profiles.find(x => x.id === id);
+ if (!p) return;
+ activeProfile = p.id;
+ state = loadState();
+ $("profileScreen").classList.add("hidden");
+ $("welcomeName").textContent = p.name;
+ applyTheme();
+ renderFiles();
+ renderNotes();
+ renderGames();
+ updateDashboard();
+}
+function applyTheme() {
+ $("wallpaper").style.background = THEMES[state.theme] || THEMES[0];
+ document.documentElement.style.setProperty("--accent", state.accent || "#7c83ff");
+}
+function setTheme(index) {
+ state.theme = index;
+ applyTheme();
+ saveState();
+}
+function setAccent(color) {
+ state.accent = color;
+ applyTheme();
+ saveState();
+}
+function closeWindows() {
+ document.querySelectorAll(".window").forEach(w => w.classList.remove("show"));
+ if (gameTimer) { clearInterval(gameTimer); gameTimer = null; }
+}
+function openApp(name) {
+ closeWindows();
+ const el = $("win-" + name);
+ if (!el) return;
+ el.classList.add("show");
+ if (name === "editor") runCode();
+ if (name === "files") renderFiles();
+ if (name === "notes") renderNotes();
+ if (name === "games") renderGames();
+}
+function updateDashboard() {
+ if (!state) return;
+ $("fileCount").textContent = state.files.length;
+ $("noteCount").textContent = state.notes.length;
+ $("gameCount").textContent = GAMES.length;
+}
+
+// File manager: virtual files stored as text, not real device files.
+function createFile() {
+ const name = prompt("اسم الملف الجديد:", "ملف جديد.txt");
+ if (name === null) return;
+ if (!name.trim()) { alert("اكتب اسمًا للملف."); return; }
+ state.files.push({id:uid(), name:name.trim().slice(0,100), type:"file", content:""});
+ saveState();
+ renderFiles();
+}
+function createFolder() {
+ const name = prompt("اسم المجلد الجديد:", "مجلد جديد");
+ if (name === null) return;
+ if (!name.trim()) { alert("اكتب اسمًا للمجلد."); return; }
+ state.files.push({id:uid(), name:name.trim().slice(0,100), type:"folder", content:""});
+ saveState();
+ renderFiles();
+}
+function renderFiles() {
+ if (!state) return;
+ $("fileList").innerHTML = state.files.length ? state.files.map(f =>
+  `<div class="file-item">
+   <span class="file-emoji">${f.type === "folder" ? "📂" : "📄"}</span>
+   <strong>${esc(f.name)}</strong>
+   <div class="row" style="justify-content:center">
+    <button onclick="editFile('${f.id}')">فتح / تعديل</button>
+    <button onclick="renameFile('${f.id}')">إعادة تسمية</button>
+    <button onclick="deleteFile('${f.id}')">حذف</button>
+   </div>
+  </div>`
+ ).join("") : '<div class="empty">📁 لا توجد ملفات. أنشئ أول ملف لك!</div>';
+}
+function editFile(id) {
+ const f = state.files.find(x => x.id === id);
+ if (!f) return;
+ if (f.type === "folder") {
+  alert("هذا مجلد تجريبي. يمكنك إعادة تسميته أو حذفه.");
+  return;
+ }
+ const content = prompt("محتوى " + f.name, f.content || "");
+ if (content === null) return;
+ f.content = content;
+ saveState();
+ renderFiles();
+}
+function renameFile(id) {
+ const f = state.files.find(x => x.id === id);
+ if (!f) return;
+ const name = prompt("الاسم الجديد:", f.name);
+ if (name === null || !name.trim()) return;
+ f.name = name.trim().slice(0,100);
+ saveState();
+ renderFiles();
+}
+function deleteFile(id) {
+ if (!confirm("هل تريد حذف هذا العنصر؟")) return;
+ state.files = state.files.filter(x => x.id !== id);
+ saveState();
+ renderFiles();
+}
+
+// Notes
+function newNote() {
+ const title = prompt("عنوان الملاحظة:", "ملاحظة جديدة");
+ if (title === null) return;
+ if (!title.trim()) { alert("اكتب عنوانًا للملاحظة."); return; }
+ const note = {id:uid(), title:title.trim().slice(0,100), content:"", updated:Date.now()};
+ state.notes.unshift(note);
+ saveState();
+ renderNotes();
+ const content = prompt("اكتب محتوى الملاحظة:", "");
+ if (content !== null) {
+  note.content = content;
+  note.updated = Date.now();
+  saveState();
+  renderNotes();
+ }
+}
+function editNote(id) {
+ const n = state.notes.find(x => x.id === id);
+ if (!n) return;
+ const title = prompt("عنوان الملاحظة:", n.title);
+ if (title === null) return;
+ if (!title.trim()) { alert("العنوان مطلوب."); return; }
+ const content = prompt("محتوى الملاحظة:", n.content);
+ if (content === null) return;
+ n.title = title.trim().slice(0,100);
+ n.content = content;
+ n.updated = Date.now();
+ saveState();
+ renderNotes();
+}
+function deleteNote(id) {
+ if (!confirm("حذف هذه الملاحظة؟")) return;
+ state.notes = state.notes.filter(n => n.id !== id);
+ saveState();
+ renderNotes();
+}
+function renderNotes() {
+ if (!state) return;
+ $("noteList").innerHTML = state.notes.length ? state.notes.map(n =>
+  `<article class="note">
+   <strong>${esc(n.title)}</strong>
+   <button onclick="deleteNote('${n.id}')">🗑️</button>
+   <p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(n.content || "ملاحظة فارغة")}</p>
+   <small class="muted">${new Date(n.updated).toLocaleString("ar")}</small>
+   <div style="margin-top:10px"><button class="btn" onclick="editNote('${n.id}')">تعديل</button></div>
+  </article>`
+ ).join("") : '<div class="empty">📝 لا توجد ملاحظات. أنشئ أول ملاحظة!</div>';
+}
+
+// HTML editor. The sandbox prevents same-origin access to the parent page.
+function runCode() {
+ const iframe = $("preview");
+ iframe.srcdoc = $("codeInput").value;
+}
+
+// Games
+function renderGames() {
+ $("gameGrid").innerHTML = GAMES.map(g =>
+  `<article class="game">
+   <div class="cover">${g.icon}</div>
+   <h3>${esc(g.name)}</h3>
+   <p>${esc(g.desc)}</p>
+   <button class="btn primary" onclick="playGame('${g.url}')">▶ تشغيل</button>
+  </article>`
+ ).join("");
+}
+function playGame(game) {
+ if (gameTimer) { clearInterval(gameTimer); gameTimer = null; }
+ const panel = $("gameGrid");
+ if (game === "numbers") {
+  const target = Math.floor(Math.random()*9)+1;
+  const answer = prompt("لعبة الأرقام: خمّن رقمًا من 1 إلى 9");
+  if (answer === null) return;
+  alert(Number(answer) === target ? "ممتاز! إجابة صحيحة 🎉" : "الرقم كان " + target + ". جرّب مرة ثانية!");
+ } else if (game === "colors") {
+  const colors = ["أحمر","أزرق","أخضر","أصفر","بنفسجي"];
+  const target = colors[Math.floor(Math.random()*colors.length)];
+  const answer = prompt("لعبة الألوان: اكتب اسم لون من هذه القائمة:\n" + colors.join("، "));
+  if (answer === null) return;
+  alert(answer.trim() === target ? "أحسنت! 🎉" : "اللون المطلوب كان: " + target);
+ } else if (game === "guess") {
+  let tries = 0, target = Math.floor(Math.random()*20)+1;
+  while (tries < 5) {
+   const answer = prompt("خمّن رقمًا من 1 إلى 20. المحاولات المتبقية: " + (5-tries));
+   if (answer === null) return;
+   if (Number(answer) === target) { alert("فزت! 🎉"); return; }
+   alert(Number(answer) < target ? "جرّب رقمًا أكبر" : "جرّب رقمًا أصغر");
+   tries++;
+  }
+  alert("انتهت المحاولات. الرقم هو " + target);
+ } else if (game === "click") {
+  let count = 0;
+  const start = Date.now();
+  const seconds = 5;
+  const popup = document.createElement("div");
+  popup.style.cssText = "position:fixed;inset:15%;z-index:100;background:#11182a;border:1px solid #7c83ff;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px;text-align:center";
+  popup.innerHTML = '<h2>⚡ اختبار سرعة النقر</h2><p>اضغط بأسرع ما تستطيع خلال 5 ثوانٍ!</p><button id="clickGameButton" class="btn primary" style="font-size:24px">اضغط هنا!</button><strong id="clickGameCount">0</strong><button class="btn" id="closeClickGame">إغلاق</button>';
+  document.body.appendChild(popup);
+  popup.querySelector("#clickGameButton").onclick = () => {
+   if (Date.now() - start >= seconds*1000) return;
+   count++;
+   popup.querySelector("#clickGameCount").textContent = count;
+  };
+  popup.querySelector("#closeClickGame").onclick = () => popup.remove();
+  gameTimer = setTimeout(() => {
+   if (!popup.isConnected) return;
+   popup.querySelector("p").textContent = "انتهى الوقت! نتيجتك: " + count + " نقرة.";
+   popup.querySelector("#clickGameButton").disabled = true;
+   gameTimer = null;
+  }, seconds*1000);
+ }
+}
+
+// Export and import
+function exportData() {
+ const data = {format:"NEXORA-OS-Backup-v1", profile:profiles.find(p => p.id === activeProfile), state};
+ const blob = new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+ const url = URL.createObjectURL(blob);
+ const a = document.createElement("a");
+ a.href = url;
+ a.download = "nexora-backup.json";
+ a.click();
+ setTimeout(() => URL.revokeObjectURL(url),1000);
+}
+function importData(event) {
+ const file = event.target.files && event.target.files[0];
+ if (!file) return;
+ if (file.size > 5*1024*1024) { alert("الملف أكبر من الحد المسموح."); event.target.value=""; return; }
+ const reader = new FileReader();
+ reader.onload = () => {
+  try {
+   const data = JSON.parse(reader.result);
+   if (data.format !== "NEXORA-OS-Backup-v1" || !data.state ||
+       !Array.isArray(data.state.files) || !Array.isArray(data.state.notes)) {
+    throw new Error("invalid");
+   }
+   if (!confirm("استعادة النسخة ستستبدل ملفات وملاحظات الملف الشخصي الحالي. متابعة؟")) return;
+   state = data.state;
+   saveState();
+   applyTheme();
+   renderFiles();
+   renderNotes();
+   updateDashboard();
+   alert("تمت استعادة البيانات على هذا الجهاز.");
+  } catch {
+   alert("ملف النسخة الاحتياطية غير صالح.");
+  } finally {
+   event.target.value = "";
+  }
+ };
+ reader.readAsText(file);
+}
+function clearMyData() {
+ if (!confirm("سيتم حذف ملفات وملاحظات هذا الملف الشخصي فقط. هل أنت متأكد؟")) return;
+ state.files = [];
+ state.notes = [];
+ saveState();
+ renderFiles();
+ renderNotes();
+}
+
+// Clock
+function updateClock() {
+ $("clock").textContent = new Date().toLocaleTimeString("ar-BH",{hour:"2-digit",minute:"2-digit"});
+}
+updateClock();
+setInterval(updateClock,30000);
+
+if (profiles.length) {
+ renderProfiles();
+} else {
+ $("profileName").value = "";
+ $("profileName").placeholder = "اكتب اسمك للبدء";
+}
+</script>
+</body>
+</html>
